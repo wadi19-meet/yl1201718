@@ -34,11 +34,11 @@ def ex3():
 			print(self.name," likes to play ",self.favorite_sport," everyday")
 
 
-	Jack = Person("jack",15,"baitsahoor-sahooore-","zallameh","banana","soccer")
+	Jack = Person("jack",15,"baitsahoor-sahooore-","girl","banana","soccer")
 	Jack.eat()
 	Jack.sport()
 def extra():
-import random
+	import random
 
 	class Song(object):
 		def __init__(self,songs):
@@ -47,10 +47,15 @@ import random
 			print(self.songs)
 			for lines in self.songs:
 				print(lines)
-	x = random.randit(0,len(self.songs))
+		def sing_me_a_random_song(self):	
+			for i in range(len(self.songs)):
+				x = random.randint(0,len(self.songs)-1)
+				print(self.songs[x])
+
 	W = Song(["Roses are red,",
 		"Violets are blue,",
 		"I wrote this poem for you."])
-	
-	W.sing_me_a_song()
+	W.sing_me_a_random_song()
+
+
 extra()
