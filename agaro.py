@@ -2,24 +2,39 @@ from turtle import *
 import random
 import time
 from ball import Ball
+from ball import Food
+import math
 colormode(255)
 tracer(0)
 ht()
-running = True
+RUNNING = True
 sleep = 0.0077
+setup (3000,3000)
+
+pu()
+score = clone()  
+score = 0
+
+score.goto(600,300)
+score.color ("red")
+
+
+
+
+
 SCREEN_WIDTH = getcanvas().winfo_width()/2
 SCREEN_HEIGHT = getcanvas().winfo_height()/2
 NUMBER_OF_BALL = 5
 MINIMUM_BALL_RADIUS = 10
-MAXIMUM_BALL_RADIUS =100
+MAXIMUM_BALL_RADIUS = 15
+
 MINIMUM_BALL_DX = -5
 MAXIMUM_BALL_DX = 5
 MINIMUM_BALL_DY = -5
 MAXIMUM_BALL_DY = 5
+foood1 = Food(x, y, radius)
 
-
-MY_BALL = Ball(5 ,10 ,2 ,3 ,10)
-
+MY_BALL = Ball(5 ,10 ,0 ,0 ,20)
 Balls = []
 
 for i in range (NUMBER_OF_BALL):
@@ -57,17 +72,16 @@ def check_all_balls_collision():
 		for ball2 in Balls:
 			if check_collision(ball1, ball2):
 				
-				x = random.randint(- SCREEN_WIDTH + MAXIMUM_BALL_RADIUS , SCREEN_WIDTH - MAXIMUM_BALL_RADIUS)
-				y = random.randint(- SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS , SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS)
-				dx = random.randint(MAXIMUM_BALL_DX, MINIMUM_BALL_DX)
-				dy = random.randint(MAXIMUM_BALL_DY, MINIMUM_BALL_DX)
-				radius = random.randint(MAXIMUM_BALL_RADIUS, MINIMUM_BALL_RADIUS)
-
+				x = random.randint(int(- SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
+				y = random.randint(int(- SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS) , int(SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS))
+				dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
+				dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
+				radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS)
 				while (dx == 0):
-					dx = random.randint()
+					dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
 
 				while (dy == 0):
-					dy = random.randint()
+					dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
 
 				if ball1.radius < ball2.radius:
 					ball1.goto(x,y)
@@ -92,11 +106,11 @@ def check_all_balls_collision():
 def check_myball_colllision ():
 	for i in Balls :
 		if check_collision (MY_BALL,i) == True :
-			x = random.randint(- SCREEN_WIDTH + MAXIMUM_BALL_RADIUS , SCREEN_WIDTH - MAXIMUM_BALL_RADIUS)
-			y = random.randint(- SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS , SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS)
+			x = random.randint(int(- SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
+			y = random.randint(int(- SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS) , int(SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS))
 			dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
-			dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY,)
-			radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS,)
+			dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
+			radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS)
 
 			while (dx == 0):
 					dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
@@ -104,10 +118,19 @@ def check_myball_colllision ():
 			while (dy == 0):
 					dy = random.randint(MINIMUM_BALL_DY, MAXIMUM_BALL_DY)
 
-			if MY_BALL.radius < i.radius :
+			if MY_BALL.radius > i.radius :
+				i.goto(x,y)
+				i.dx = dx
+				i.dy = dy
+				i.radius = radius
+				MY_BALL.radius = MY_BALL.radius +1
+				i.shapesize(i.radius/10)
+				MY_BALL.shapesize(MY_BALL.radius/10)
+				
+			else:
 				return False
-			elif MY_BALL.radius > i.radius:
-					
+
+	return True			
 # ##############################################################
 #### i have to continue this code 
 ######
@@ -122,39 +145,39 @@ def check_myball_colllision ():
 				# i.shapesize(i.radius/10)
 				# MY_BALL.shapesize(MY_BALL.radius/10)
 
-
-
-
 def move_around(event):
+
 	mouseX = event.x - SCREEN_WIDTH
 	mouseY = SCREEN_HEIGHT - event.y
 
-	turtle.getcanvas().bind("<motion>", movearound)
+	MY_BALL.goto(mouseX, mouseY)
+
+getcanvas().bind("<Motion>", move_around)
+getscreen().listen()
 
 
-	ballX = MY_BALL.x
-	ballY = MY_BALL.y
 
-	distanceX = mouseX - ballx
-	distanceY = mouseY - ballY 
+while RUNNING:
+	if SCREEN_WIDTH != getcanvas().winfo_width()/2:
+		SCREEN_WIDTH = getcanvas().winfo_width()/2
 
-	MY_BALL.dyv = (distanceX / (MY_BALL.radius * ACCELARATION_OF_BALL)) * MY_BALL.dx
-	MY_BALL.dyv = (distanceY / (MY_BALL.radius * ACCELARATION_OF_BALL)) * MY_BALL.dy
+	elif SCREEN_HEIGHT != getcanvas().winfo_height()/2:
+		SCREEN_HEIGHT = getcanvas().winfo_height()/2
 
-	MY_BALL>move(SCREEN_WIDTH, SCREEN_HEIGHT)
+	
+	
 
-	print(int(MY_BALL.radius))
-
-
-def move_my_ball():
-	global RUNNING
+	move_all_balls()
+	check_all_balls_collision()
 	MY_BALL.move(SCREEN_WIDTH, SCREEN_HEIGHT)
 	if check_myball_colllision() == False:
 		RUNNING = False
 
-	check_all_balls_collision()
+	else:
+		RUNNING = True
 
+	
 
-
-
+	getscreen().update()
+	time.sleep(sleep)
 mainloop()
