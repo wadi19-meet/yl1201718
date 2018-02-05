@@ -11,12 +11,12 @@ RUNNING = True
 sleep = 0.0077
 setup (3000,3000)
 
-pu()
-score = clone()  
-score = 0
+# pu()
+# score = clone()  
+# score = 0
 
-score.goto(600,300)
-score.color ("red")
+# score.goto(600,300)
+# score.color ("red")
 
 
 
@@ -24,6 +24,7 @@ score.color ("red")
 
 SCREEN_WIDTH = getcanvas().winfo_width()/2
 SCREEN_HEIGHT = getcanvas().winfo_height()/2
+NUMBER_OF_FOOD = 35
 NUMBER_OF_BALL = 5
 MINIMUM_BALL_RADIUS = 10
 MAXIMUM_BALL_RADIUS = 15
@@ -32,11 +33,11 @@ MINIMUM_BALL_DX = -5
 MAXIMUM_BALL_DX = 5
 MINIMUM_BALL_DY = -5
 MAXIMUM_BALL_DY = 5
-foood1 = Food(x, y, radius)
+food1 = Food(x, y, radius)
 
 MY_BALL = Ball(5 ,10 ,0 ,0 ,20)
 Balls = []
-
+Foods = []
 for i in range (NUMBER_OF_BALL):
 
 	x = random.randint(int(-SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
@@ -49,6 +50,11 @@ for i in range (NUMBER_OF_BALL):
 	ball1 = Ball(x, y, dx, dy, radius)
 	Balls.append(ball1)
 
+def food ():
+
+
+
+
 def move_all_balls():
 	for i in Balls:
 		i.move(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -59,7 +65,7 @@ def check_collision(ball1,ball2):
 	x1 = ball1.xcor()
 	x2 = ball2.xcor()
 	y1 = ball1.ycor()
-	y2 = ball1.ycor()	
+	y2 = ball2.ycor()	
 	d=math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
 
 	if d <= (ball1.radius + ball2.radius):
@@ -131,19 +137,7 @@ def check_myball_colllision ():
 				return False
 
 	return True			
-# ##############################################################
-#### i have to continue this code 
-######
 
-######################################################3
-
-				# i.goto(x,y)
-				# i.dx = dx
-				# i.dy = dy
-				# i.radius = radius
-				# MY_BALL.radius = MY_BALL.radius +1
-				# i.shapesize(i.radius/10)
-				# MY_BALL.shapesize(MY_BALL.radius/10)
 
 def move_around(event):
 
