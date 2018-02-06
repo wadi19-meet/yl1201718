@@ -65,16 +65,3 @@ class Ball(Turtle):
 
 
 
-class Food(Turtle):
-	def __init__(self, x, y, radius)
-		Turtle.__init__(self)
-		self.goto(x,y)
-		self.shape("circle")
-		self.shapesize(radius/10)		
-		self.radius = radius
-		r = random.randint(0,255)
-		g = random.randint(0,255)
-		b = random.randint(0,255)
-		self.color((r,g,b))
-
-			

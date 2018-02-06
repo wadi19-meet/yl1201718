@@ -2,11 +2,12 @@ from turtle import *
 import random
 import time
 from ball import Ball
-from ball import Food
+
 import math
 colormode(255)
 tracer(0)
 ht()
+speed(1)
 RUNNING = True
 sleep = 0.0077
 setup (3000,3000)
@@ -24,20 +25,23 @@ setup (3000,3000)
 
 SCREEN_WIDTH = getcanvas().winfo_width()/2
 SCREEN_HEIGHT = getcanvas().winfo_height()/2
-NUMBER_OF_FOOD = 35
-NUMBER_OF_BALL = 5
+# NUMBER_OF_FOOD = 
+NUMBER_OF_BALL = 7
 MINIMUM_BALL_RADIUS = 10
-MAXIMUM_BALL_RADIUS = 15
-
+MAXIMUM_BALL_RADIUS = 70
 MINIMUM_BALL_DX = -5
 MAXIMUM_BALL_DX = 5
 MINIMUM_BALL_DY = -5
 MAXIMUM_BALL_DY = 5
-food1 = Food(x, y, radius)
-
-MY_BALL = Ball(5 ,10 ,0 ,0 ,20)
+MIN_FOOD_RADIUS = 3
+MAX_FOOD_RADIUS = 9
+MAX_FOOD_NUMBER = 30
+SCORE_SIZE = 15
+SCORE_TYPE = "bold"
+SCORE_COLOR = "green"
+MY_BALL = Ball(0 ,0 ,0 ,0 ,10)
+FOOD = []
 Balls = []
-Foods = []
 for i in range (NUMBER_OF_BALL):
 
 	x = random.randint(int(-SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
@@ -49,8 +53,39 @@ for i in range (NUMBER_OF_BALL):
 
 	ball1 = Ball(x, y, dx, dy, radius)
 	Balls.append(ball1)
+pd()
+scorewrite = clone()
+scorewrite.goto(SCREEN_WIDTH -25, SCREEN_HEIGHT -15)
+scorewrite.color(SCORE_COLOR)
+pu()
+ht()
+
+
+
+def write_score():
+	global scorewrite
+	scorevalue = int(MY_BALL.radius)
+	scorewrite.goto(SCREEN_WIDTH - 160, SCREEN_HEIGHT-30)
+	scorewrite.clear()
+	scorewrite.write("Score: " + str(scorevalue), False, "left", (SCORE_SIZE, SCORE_TYPE, SCORE_COLOR))
+
+
+
+
+
+
 
 def food ():
+	creatfood = random.uniform(0,0.19)
+
+	if creatfood <0.2 and len(FOOD) < MAX_FOOD_NUMBER:
+		x = random.uniform(-SCREEN_WIDTH + MAX_FOOD_RADIUS, SCREEN_WIDTH - MAX_FOOD_RADIUS)
+		y = random.uniform(-SCREEN_HEIGHT + MAX_FOOD_RADIUS, SCREEN_HEIGHT - MAX_FOOD_RADIUS)
+		radius = random.uniform(MIN_FOOD_RADIUS, MAX_FOOD_RADIUS)
+
+
+		food = Ball(x,y,0,0,radius)
+		FOOD.append(food)
 
 
 
@@ -83,6 +118,12 @@ def check_all_balls_collision():
 				dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
 				dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
 				radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS)
+				r = random.randint(0,255)
+				g = random.randint(0,255)
+				b = random.randint(0,255)
+				new_color = (r, g, b)
+				# make new color r = 
+				# new_color = (r,g,b)
 				while (dx == 0):
 					dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
 
@@ -97,7 +138,7 @@ def check_all_balls_collision():
 					ball2.radius = ball2.radius +1
 					ball1.shapesize(ball1.radius/10)
 					ball2.shapesize(ball2.radius/10)
-
+					ball1.color((r,g,b))
 				if ball1.radius > ball2.radius:
 					
 					ball2.goto(x,y)
@@ -107,6 +148,9 @@ def check_all_balls_collision():
 					ball1.radius = ball1.radius +1
 					ball2.shapesize(ball2.radius/10)
 					ball1.shapesize(ball1.radius/10)
+					ball2.color((r,g,b))
+
+
 
 
 def check_myball_colllision ():
@@ -117,6 +161,10 @@ def check_myball_colllision ():
 			dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
 			dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
 			radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS)
+			r = random.randint(0,255)
+			g = random.randint(0,255)
+			b = random.randint(0,255)
+			new_color = (r, g, b)
 
 			while (dx == 0):
 					dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
@@ -129,14 +177,33 @@ def check_myball_colllision ():
 				i.dx = dx
 				i.dy = dy
 				i.radius = radius
-				MY_BALL.radius = MY_BALL.radius +1
+				MY_BALL.radius = MY_BALL.radius + i.radius / 10
 				i.shapesize(i.radius/10)
 				MY_BALL.shapesize(MY_BALL.radius/10)
-				
+				i.color((r,g,b))
 			else:
 				return False
 
 	return True			
+
+def eat_food():
+	index = 0
+	for food in FOOD:
+		colliding = check_collision(MY_BALL,food) 
+		if colliding == True:
+			MY_BALL.radius += food.radius / 8
+			MY_BALL.shapesize(MY_BALL.radius / 10)
+
+			x = random.uniform(-SCREEN_WIDTH + MAX_FOOD_RADIUS, SCREEN_WIDTH - MAX_FOOD_RADIUS)
+			y = random.uniform(-SCREEN_HEIGHT + MAX_FOOD_RADIUS, SCREEN_HEIGHT - MAX_FOOD_RADIUS)
+			radius = random.uniform(MIN_FOOD_RADIUS, MAX_FOOD_RADIUS)
+
+			food.ht()
+
+			FOOD.pop(index)
+
+		index += 1	
+
 
 
 def move_around(event):
@@ -160,7 +227,9 @@ while RUNNING:
 
 	
 	
-
+	
+	food()
+	eat_food()
 	move_all_balls()
 	check_all_balls_collision()
 	MY_BALL.move(SCREEN_WIDTH, SCREEN_HEIGHT)
