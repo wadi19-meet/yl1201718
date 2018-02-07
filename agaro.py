@@ -22,42 +22,48 @@ setup (3000,3000)
 
 
 
-
+MY_BALL = Ball(0 ,0 ,0 ,0 ,50)
 SCREEN_WIDTH = getcanvas().winfo_width()/2
 SCREEN_HEIGHT = getcanvas().winfo_height()/2
 # NUMBER_OF_FOOD = 
-NUMBER_OF_BALL = 7
-MINIMUM_BALL_RADIUS = 10
-MAXIMUM_BALL_RADIUS = 70
-MINIMUM_BALL_DX = -5
-MAXIMUM_BALL_DX = 5
-MINIMUM_BALL_DY = -5
-MAXIMUM_BALL_DY = 5
+NUMBER_OF_BALL = 3
+MINIMUM_BALL_RADIUS = int(MY_BALL.radius*0.75)
+MAXIMUM_BALL_RADIUS = int(MY_BALL.radius*1.5)
+MINIMUM_BALL_DX = -2
+MAXIMUM_BALL_DX = 2
+MINIMUM_BALL_DY = -2
+MAXIMUM_BALL_DY = 2
 MIN_FOOD_RADIUS = 3
 MAX_FOOD_RADIUS = 9
-MAX_FOOD_NUMBER = 30
+MAX_FOOD_NUMBER = 45
 SCORE_SIZE = 15
 SCORE_TYPE = "bold"
-SCORE_COLOR = "green"
-MY_BALL = Ball(0 ,0 ,0 ,0 ,10)
+SCORE_COLOR = "red"
+
 FOOD = []
 Balls = []
 for i in range (NUMBER_OF_BALL):
 
 	x = random.randint(int(-SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
 	y = random.randint(int(-SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS) ,int(SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS))
+
+	while MY_BALL.distance(x,y) < MY_BALL.radius + x:		
+		x = random.randint(int(-SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
+		y = random.randint(int(-SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS) ,int(SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS))
+
 	dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
 	dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
-	radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS,)
+	radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS)
 	
 
 	ball1 = Ball(x, y, dx, dy, radius)
 	Balls.append(ball1)
-pd()
+
 scorewrite = clone()
+scorewrite.pu()
 scorewrite.goto(SCREEN_WIDTH -25, SCREEN_HEIGHT -15)
 scorewrite.color(SCORE_COLOR)
-pu()
+
 ht()
 
 
@@ -67,7 +73,8 @@ def write_score():
 	scorevalue = int(MY_BALL.radius)
 	scorewrite.goto(SCREEN_WIDTH - 160, SCREEN_HEIGHT-30)
 	scorewrite.clear()
-	scorewrite.write("Score: " + str(scorevalue), False, "left", (SCORE_SIZE, SCORE_TYPE, SCORE_COLOR))
+	scorewrite.pencolor(SCORE_COLOR)
+	scorewrite.write("Score: " + str(scorevalue), False, "left", font = ("Arial", SCORE_SIZE, SCORE_TYPE))
 
 
 
@@ -115,9 +122,12 @@ def check_all_balls_collision():
 				
 				x = random.randint(int(- SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
 				y = random.randint(int(- SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS) , int(SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS))
+				while MY_BALL.distance(x,y) < MY_BALL.radius + ball2.radius:
+					x = random.randint(int(- SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
+					y = random.randint(int(- SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS) , int(SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS))
 				dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
 				dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
-				radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS)
+				radius = random.randint(int(MY_BALL.radius*0.75), int(MY_BALL.radius*1.5))
 				r = random.randint(0,255)
 				g = random.randint(0,255)
 				b = random.randint(0,255)
@@ -129,6 +139,33 @@ def check_all_balls_collision():
 
 				while (dy == 0):
 					dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
+
+				# if ball1.radius <= SCREEN_WIDTH:
+				# 	ball1.goto(x,y)
+				# 	ball1.dx = dx
+				# 	ball1.dy = dy
+				# 	ball1.radius = radius
+				# 	ball1.shapesize(ball1.radius/10)
+				# elif ball1.radius >= -SCREEN_WIDTH:
+				# 	ball1.goto(x,y)
+				# 	ball1.dx = dx
+				# 	ball1.dy = dy
+				# 	ball1.radius = radius
+				# 	ball1.shapesize(ball1.radius/10)
+				# elif ball1.radius <= SCREEN_HEIGHT:
+				# 	ball1.dx = dx
+				# 	ball1.dy = dy
+				# 	ball1.radius = radius
+				# 	ball1.shapesize(ball1.radius/10)
+				# elif ball1.radius >= -SCREEN_HEIGHT:
+				# 	ball1.dx = dx
+				# 	ball1.dy = dy
+				# 	ball1.radius = radius
+				# 	ball1.shapesize(ball1.radius/10)
+
+
+
+
 
 				if ball1.radius < ball2.radius:
 					ball1.goto(x,y)
@@ -158,9 +195,13 @@ def check_myball_colllision ():
 		if check_collision (MY_BALL,i) == True :
 			x = random.randint(int(- SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
 			y = random.randint(int(- SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS) , int(SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS))
+
+			while MY_BALL.distance(x,y) < MY_BALL.radius + i.radius:
+				x = random.randint(int(- SCREEN_WIDTH + MAXIMUM_BALL_RADIUS) , int(SCREEN_WIDTH - MAXIMUM_BALL_RADIUS))
+				y = random.randint(int(- SCREEN_HEIGHT + MAXIMUM_BALL_RADIUS) , int(SCREEN_HEIGHT - MAXIMUM_BALL_RADIUS))
 			dx = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DX)
 			dy = random.randint(MINIMUM_BALL_DX, MAXIMUM_BALL_DY)
-			radius = random.randint(MINIMUM_BALL_RADIUS, MAXIMUM_BALL_RADIUS)
+			radius = random.randint(int(MY_BALL.radius*0.75), int(MY_BALL.radius*1.5))
 			r = random.randint(0,255)
 			g = random.randint(0,255)
 			b = random.randint(0,255)
@@ -182,6 +223,12 @@ def check_myball_colllision ():
 				MY_BALL.shapesize(MY_BALL.radius/10)
 				i.color((r,g,b))
 			else:
+				ht()
+				goto(-180,0)
+				pencolor(SCORE_COLOR)
+				write("YOU LOST", False, "left", font = ("Arial",int(SCORE_SIZE*3), SCORE_TYPE) )
+				time.sleep(2)
+				quit()
 				return False
 
 	return True			
@@ -227,18 +274,30 @@ while RUNNING:
 
 	
 	
-	
+	write_score()
 	food()
 	eat_food()
 	move_all_balls()
 	check_all_balls_collision()
 	MY_BALL.move(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+	
 	if check_myball_colllision() == False:
 		RUNNING = False
 
 	else:
 		RUNNING = True
 
+	
+
+
+	if MY_BALL.radius >= 250:
+		ht()
+		goto(-157,0)
+		pencolor(SCORE_COLOR)
+		write("YOU WON", False, "left", font = ("Arial",int(SCORE_SIZE*3), SCORE_TYPE) )
+		time.sleep(2)
+		quit()
 	
 
 	getscreen().update()
